@@ -1,15 +1,17 @@
 const {
   listarUsuariosActuales,
   agregarUsuarioNuevo,
+  actualizarUsuarioBL,
   actualizarPasswordBL,
   buscarUsuarioDB,
 } = require("../bussinesLogic/usuariosBL");
 const { comparePassword } = require("../helpers/passwordUtils");
 const { generateToken } = require("../helpers/jwtUtils");
-
-const response = { success: "", messages: "", data: [] };
+const { GenericResponse } = require("../utils/genericResponse");
+const { CustomMessages } = require("../utils/messages");
 
 const listarUsuarios = async (req, res) => {
+  const response = new GenericResponse();
   try {
     response.data = await listarUsuariosActuales();
     response.messages = "Ok";
@@ -18,13 +20,14 @@ const listarUsuarios = async (req, res) => {
   } catch (e) {
     console.log(e);
     response.success = false;
-    response.messages = "No posee acceso";
+    response.messages = CustomMessages.error_500;
     response.data = [];
     return res.status(500).json(response);
   }
 };
 
 const guardarNuevoUsuario = async (req, res) => {
+  const response = new GenericResponse();
   try {
     const { nombre, username, email, password } = req.body;
     const dtoUsuario = { nombre, username, email, password };
@@ -35,29 +38,48 @@ const guardarNuevoUsuario = async (req, res) => {
   } catch (e) {
     console.log(e);
     response.success = false;
-    response.messages = "Error interno en el servidor";
+    response.messages = CustomMessages.error_500;
+    response.data = [];
+    return res.status(500).json(response);
+  }
+};
+
+const actualizarUsuarioC = async (req, res) => {
+  const response = new GenericResponse();
+  try {
+    const { id, nombre, email } = req.body;
+    const resultado = await actualizarUsuarioBL(id, nombre, email);
+    response.messages = "Usuario actualizado correctamente";
+    response.data = resultado;
+    return res.json(response);
+  } catch (e) {
+    console.log(e);
+    response.success = false;
+    response.messages = CustomMessages.error_500;
     response.data = [];
     return res.status(500).json(response);
   }
 };
 
 const actualizaPassword = async (req, res) => {
+  const response = new GenericResponse();
   try {
-    const { _id, edad } = req.body;
-    const resultado = await actualizarPasswordBL(_id, edad);
+    const { id, password } = req.body;
+    const resultado = await actualizarPasswordBL(id, password);
     response.messages = "Password actualizado correctamente";
     response.data = resultado;
     return res.json(response);
   } catch (e) {
     console.log(e);
     response.success = false;
-    response.messages = "Error interno en el servidor";
+    response.messages = CustomMessages.error_500;
     response.data = [];
     return res.status(500).json(response);
   }
 };
 
 const login = async (req, res) => {
+  const response = new GenericResponse();
   try {
     const { username, password } = req.body;
 
@@ -92,6 +114,7 @@ const login = async (req, res) => {
 module.exports = {
   listarUsuarios,
   guardarNuevoUsuario,
+  actualizarUsuarioC,
   actualizaPassword,
   login,
 };

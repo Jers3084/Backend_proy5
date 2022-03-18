@@ -1,19 +1,19 @@
-const { verifyToken } = require("../helpers/jwtUtils");
+const { verifyToken } = require('../helpers/jwtUtils')
 
 const validateToken = (req, res, next) => {
-  const { authorization } = req.headers;
+  const { authorization } = req.headers
   if (!authorization) {
-    return res.status(401).json({ messages: "No contiene token" });
+    return res.status(401).json({ messages: 'No contiene token' })
   }
   try {
-    const { id, username, exp } = verifyToken(authorization);
+    const { id, username, exp } = verifyToken(authorization)
 
-    req.id = id;
-    req.username = username;
-    next();
+    req.id = id
+    req.username = username
+    next()
   } catch (error) {
-    return res.status(401).json({ messages: "Token invalido" });
+    return res.status(401).json({ messages: 'Token invalido' })
   }
-};
+}
 
-module.exports = { validateToken };
+module.exports = { validateToken }

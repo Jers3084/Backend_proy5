@@ -10,11 +10,7 @@ const {ListarProductos, NuevoProducto} = require("../repositorys/productReposito
     return await NuevoProducto(producto);
  };
  
-/* const actualizarUsuario = async (user) => {
-   const { password, telefono, rol, id } = user;
-   return await actualizaUsuario(id, password, telefono, rol);
- };
- 
+/* 
  const eliminarUsuarioActivo = async (_id) => {
    return await eliminarUsuario(_id);
  };*/
