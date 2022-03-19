@@ -9,4 +9,5 @@ router.post("/actualizar",validateToken, actualizarUsuarioC);
 router.post("/actpassword", validateToken, actualizaPassword);
 router.post("/login", login);
 
+
 module.exports = router;
